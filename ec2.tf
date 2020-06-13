@@ -6,16 +6,20 @@ provider "aws" {
 }
 
 
-// Creation of Key
+// Generates a secure private key and encodes it as PEM
 
 resource "tls_private_key" "instance_key" {
   algorithm   = "RSA"
   rsa_bits = 4096
 }
 
+// Generates a local file with the given content
+
 resource "local_file" "key_gen" {
     filename = "i_am_key.pem"
 }
+
+// Provides an EC2 key pair resource
 
 resource "aws_key_pair" "instance_key" {
   key_name   = "i_am_key"
@@ -23,7 +27,7 @@ resource "aws_key_pair" "instance_key" {
 }
 
 
-// launch EC2 instance using terraform 
+// Provides an EC2 instance resource
 
 resource "aws_instance"  "my_instance" {
     ami = "ami-0447a12f28fddb066"
@@ -57,7 +61,7 @@ output  "myvar" {
 }
 
 
-// security group creation allowing port 80
+// Provides a security group resource
 
 resource "aws_security_group" "allow_http" {
     name = "allow_http"
@@ -94,7 +98,7 @@ resource "aws_security_group" "allow_http" {
 }
 
 
-// launch EBS volume 
+// Creates EBS volume 
 
 resource "aws_ebs_volume" "ebs_volume" {
     availability_zone = aws_instance.my_instance.availability_zone
@@ -104,6 +108,8 @@ resource "aws_ebs_volume" "ebs_volume" {
       Name = "my_ebs_volume"
   }
 }
+
+//Provides an AWS EBS Volume Attachment
 
 resource "aws_volume_attachment" "ebs_att_vol" {
     device_name = "/dev/sdf"
@@ -159,7 +165,7 @@ provisioner "remote-exec" {
 }
 
 
-// s3 bucket creation & pull image to bucket from GitHub repo
+// Provides a S3 bucket resource & pull image to bucket from GitHub repo
 
 resource "aws_s3_bucket" "bonzovi-bucket" {
   bucket = "bonzovi-bucket"
@@ -174,6 +180,8 @@ resource "aws_s3_bucket" "bonzovi-bucket" {
     }
 }
 
+// Provides a S3 bucket object resource pull & image to bucket from GitHub repo
+
 resource "aws_s3_bucket_object" "image-pull" {
     bucket = aws_s3_bucket.bonzovi-bucket.bucket
     key = "iiec-rise.jpg"
@@ -182,7 +190,7 @@ resource "aws_s3_bucket_object" "image-pull" {
 }
 
 
-// cloudfront creation & using Cloudfront URL to  update in code in /var/www/html
+// Creates an Amazon CloudFront web distribution & using Cloudfront URL to  update in code in /var/www/html
 
 locals {
     s3_origin_id = aws_s3_bucket.bonzovi-bucket.bucket
