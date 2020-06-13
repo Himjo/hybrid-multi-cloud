@@ -1,5 +1,4 @@
-// BY - HIMANSHU NAUTIYAL UNDER MENTORSHIP OF MR. VIMAL DAGA (LinuxWorld Pvt. Ltd.)
-// AWS public to launch OS using Terraform
+// AWS public cloud to launch OS using Terraform
 
 provider "aws" {
     region = "ap-south-1"
