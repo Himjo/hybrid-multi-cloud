@@ -187,6 +187,7 @@ resource "aws_s3_bucket_object" "image-pull" {
     key = "iiec-rise.jpg"
     source = "bonzovi-worlds/vimal-sir.jpg"
     acl = "public-read"
+    content_type = "text/*"	
 }
 
 
