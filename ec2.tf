@@ -187,7 +187,7 @@ resource "aws_s3_bucket_object" "image-pull" {
     key = "iiec-rise.jpg"
     source = "bonzovi-worlds/vimal-sir.jpg"
     acl = "public-read"
-    content_type = "text/*"	
+    //content_type = "text/*"	
 }
 
 
@@ -254,7 +254,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     provisioner "remote-exec" {
         inline  = [
             "sudo su << EOF",
-            "echo \"<img src='http://${self.domain_name}/${aws_s3_bucket_object.image-pull.key}'>\" >> /var/www/html/index.php",
+            "echo \"<img src='http://${aws_cloudfront_distribution.s3_distribution.domain_name}/${aws_s3_bucket_object.image-pull.key}'>\" >> /var/www/html/index.php",
             "EOF"
           ]
       }
